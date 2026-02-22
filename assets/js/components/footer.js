@@ -7,7 +7,7 @@ export function renderFooter() {
             </div>
 
             <div class="footer-middle">
-                <p class="footer-title">Anggota Kelompok</p>
+                <p class="footer-title">Our Team</p>
                 <ul>
                     <li>Kak Desi</li>
                     <li>Kak Jefry</li>

@@ -90,9 +90,15 @@ body {
   justify-content: space-between;
 }
 
+.footer-title {
+  font-size: 22px;
+  font-family: 'Sigmar One';
+}
+
 .footer-middle ul {
   list-style: none;
   margin-top: 10px;
+  font-family: 'Red Hat';
 }
 
 .footer-middle li {
