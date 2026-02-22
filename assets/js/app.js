@@ -1,0 +1,1 @@
+console.log("Bantu Ibu Kos Loaded");
