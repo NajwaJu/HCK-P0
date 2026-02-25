@@ -8,11 +8,16 @@ room object contoh:
 {
   id: "ROOM-001",
   name: "Kamar A1",
+  type: AC
   price: 1500000,
   status: "empty"  // empty | occupied
 }
 */
 export function addRoom(room) {
+  if (!room.type) {
+    console.log("Error: Type kamar wajib diisi!");
+    return null;
+  }
   if (typeof room.price !== 'number' || room.price <= 0) {
         console.log("Error: Price harus angka positif!");
         return null;

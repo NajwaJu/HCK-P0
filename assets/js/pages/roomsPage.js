@@ -1,6 +1,8 @@
 import { renderNavbar } from "../components/navbar.js";
 import { initRoomForm } from "../components/roomForm.js";
 import { renderFooter } from "../components/footer.js";
+import { renderRoomList } from "../components/roomForm.js";
+import { updateSummary } from "../components/roomForm.js";
 
 export function renderRoomsPage() {
   const app = document.getElementById("app");
@@ -45,8 +47,11 @@ export function renderRoomsPage() {
     </div>
     
 
-     
+
     ${renderFooter()}
+
   `;
   initRoomForm();
+  renderRoomList();
+  updateSummary();
 }
