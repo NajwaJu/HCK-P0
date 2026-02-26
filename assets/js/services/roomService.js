@@ -1,10 +1,6 @@
 import { rooms } from "../data/rooms.js";
 
 /*
-========================================
-CREATE ROOM
-========================================
-room object contoh:
 {
   id: "ROOM-001",
   name: "Kamar A1",
@@ -35,21 +31,11 @@ export function addRoom(room) {
   return room;
 }
 
-/*
-========================================
-READ ALL ROOMS
-========================================
-*/
 export function getRooms() {
   return rooms;
 
 }
 
-/*
-========================================
-READ SINGLE ROOM
-========================================
-*/
 export function getRoom(roomId) {
   for (let i = 0; i < rooms.length; i++) {
       if (rooms[i].id === roomId) {
@@ -60,15 +46,8 @@ export function getRoom(roomId) {
   console.log(`Error: Room ID ${roomId} tidak ditemukan!`);
   return null;
 }
-/*
-/*
-========================================
-UPDATE ROOM DATA
-========================================
-Bisa edit nama kamar / harga sewa
-*/
+
 export function updateRoom(roomId, newData) {
-  // TODO by team
   for (let i = 0; i < rooms.length; i++) {
         if (rooms[i].id === roomId) {
             if (newData.name !== undefined) rooms[i].name = newData.name;
@@ -81,13 +60,7 @@ export function updateRoom(roomId, newData) {
     return null;
 }
 
-/*
-========================================
-DELETE ROOM
-========================================
-*/
 export function deleteRoom(roomId) {
-  // TODO by team
   for (let i = 0; i < rooms.length; i++) {
       if (rooms[i].id === roomId) {
           rooms.splice(i, 1);
@@ -98,15 +71,7 @@ export function deleteRoom(roomId) {
   console.log(`Error: Room ID ${roomId} tidak ditemukan!`);
 }
 
-
-/*
-========================================
-SET ROOM OCCUPIED
-Dipanggil saat tenant check-in
-========================================
-*/
 export function setRoomOccupied(roomId) {
-  // TODO by team
   for (let i = 0; i < rooms.length; i++) {
         if (rooms[i].id === roomId) {
             rooms[i].status = "occupied";
@@ -119,14 +84,8 @@ export function setRoomOccupied(roomId) {
 }
 
 
-/*
-========================================
-SET ROOM EMPTY
-Dipanggil saat tenant check-out / evicted
-========================================
-*/
+
 export function setRoomEmpty(roomId) {
-  // TODO by team
   for (let i = 0; i < rooms.length; i++) {
     if (rooms[i].id === roomId) {
         rooms[i].status = "empty";
@@ -138,13 +97,6 @@ export function setRoomEmpty(roomId) {
   return null;
 }
 
-// ========================================
-// TESTING 
-// ========================================
-console.log("===== TESTING LANGSUNG =====");
-
-addRoom({ id: "ROOM-001", name: "Kamar A1", price: 150000, status: "empty" });
-addRoom({ id: "ROOM-002", name: "Kamar A2", price: 200000, status: "empty" });
 
 // console.log("Semua Kamar:", getRooms());
 

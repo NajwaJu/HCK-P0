@@ -1,10 +1,8 @@
 import { tenants } from "../data/tenants.js";
-import { setRoomOccupied, setRoomEmpty } from "./roomService.js";
+import { setRoomOccupied, setRoomEmpty, getRoom } from "./roomService.js";
+import { createPayment, deletePaymentByTenantId } from "./paymentService.js";
 
 /*
-========================================
-CREATE TENANT (CHECK-IN)
-========================================
 tenant object contoh:
 {
   id: "TEN-001",
@@ -17,31 +15,50 @@ tenant object contoh:
 }
 */
 export function addTenant(tenant) {
+
+  const room = getRoom(tenant.roomId);
+  if (!room) {
+    console.log("Error: Room tidak ditemukan!");
+    return null;
+  }
+  tenant.id = "TEN-" + Date.now();
+  tenant.status = "active";
+  tenant.remainingDeposit = tenant.deposit;
+
+
   tenants.push(tenant);
   setRoomOccupied(tenant.roomId);
-  console.log(`Info: Tenant ${tenant.name} berhasil ditambahkan`);
+
+  createPayment({
+    id: "PAY-" + Date.now(),
+    tenantId: tenant.id
+  });
+
+  console.log(`Info: Tenant ${tenant.name} berhasil check-in + payment dibuat`);
+  return tenant;
+
+
 }
 
-/*
-========================================
-READ ALL TENANTS
-========================================
-*/
 export function getTenants() {
   return tenants;
 }
 
-/*
-========================================
-UPDATE TENANT DATA
-========================================
-*/
+export function getTenantById(tenantId) {
+  for (let i = 0; i < tenants.length; i++) {
+    if (tenants[i].id === tenantId) {
+      return tenants[i];
+    }
+  }
+  return null;
+}
+
+
 export function updateTenant(tenantId, newData) {
-  // TODO by team
-  for (let i = 0; i , tenants.length; i++){
+  for (let i = 0; i < tenants.length; i++){
     if (tenants[i].id === tenantId){
       for (let key in newData){
-        if (key !== "id") tenants[id][key] = newData[key];
+        if (key !== "id") tenants[i][key] = newData[key];
       }
       console.log(`info: Tenant ID ${tenantId} berhasil diupdate`);
       return tenants[i];
@@ -51,36 +68,21 @@ export function updateTenant(tenantId, newData) {
   return null;
 }
 
-/*
-========================================
-DELETE TENANT (CHECK-OUT)
-========================================
-Harus:
-1. Hapus tenant
-2. Kosongkan kamar
-*/
+
 export function deleteTenant(tenantId) {
-  // TODO by team
-  let found = false;
-  const newTenants = [];
   for (let i = 0; i < tenants.length; i++){
     if (tenants[i].id === tenantId){
       setRoomEmpty(tenants[i].roomId);
-      tenants.splice(i,1);
-      console.log(`info: Tenant ID ${tenantId} berhasil ditemukan`);
+      deletePaymentByTenantId(tenantId);
+      tenants.splice(i, 1);
+      console.log("Tenant berhasil dihapus + payment dibersihkan");
       return;
-    }
+    } 
   }
-  console.log(`Delete gagal: Tenant ID ${tenantId} tidak ditemukan`);
+  console.log("Tenant tidak ditemukan");
 }
 
-/*
-========================================
-CHECK-OUT TENANT (Dipanggil PaymentService saat evicted)
-========================================
-*/
 export function checkOutTenant(tenantId) {
-  // TODO by team
   for (let i = 0; i < tenants.length; i++){
     if (tenants[i].id === tenantId){
       tenants[i].status = "evicted";
@@ -89,6 +91,6 @@ export function checkOutTenant(tenantId) {
       return  tenants[i];
     }
   }
-  console.loh(`check-out gagal: Tenant ID ${tenantId} tidak ditemukan`);
+  console.log(`check-out gagal: Tenant ID ${tenantId} tidak ditemukan`);
   return null;
 }

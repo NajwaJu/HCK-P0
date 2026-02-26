@@ -2,3 +2,11 @@
 
   margin:30px 0;
 }
+
+.tenantForm-Card{
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  margin-bottom:40px;
+}

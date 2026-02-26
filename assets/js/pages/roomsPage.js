@@ -1,8 +1,6 @@
 import { renderNavbar } from "../components/navbar.js";
-import { initRoomForm } from "../components/roomForm.js";
 import { renderFooter } from "../components/footer.js";
-import { renderRoomList } from "../components/roomForm.js";
-import { updateSummary } from "../components/roomForm.js";
+import { initRoomForm, renderRoomList, updateSummary } from "../controller/roomController.js";
 
 export function renderRoomsPage() {
   const app = document.getElementById("app");
@@ -31,7 +29,10 @@ export function renderRoomsPage() {
           </select>
 
           <input type="number" id="price" placeholder="Harga per bulan" required>
-
+          <select id="depositPolicy">
+            <option value="yes">Pakai Deposit</option>
+            <option value="no">Tanpa Deposit</option>
+          </select>
           <button class="buttonSubmit" type="submit">Simpan Kamar</button>
         </form>
       </div>

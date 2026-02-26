@@ -11,7 +11,7 @@ export function initRoomForm() {
     const number = document.getElementById("number").value;
     const type = document.getElementById("type").value;
     const price = Number(document.getElementById("price").value);
-
+    const depositPolicy = document.getElementById("depositPolicy").value;
     // buat ID otomatis
     const roomId = "ROOM-" + Date.now();
 
@@ -21,6 +21,7 @@ export function initRoomForm() {
       name: number,
       type: type,
       price: price,
+      depositPolicy: depositPolicy,
       status: "empty"
     });
 

@@ -113,3 +113,20 @@ body {
 .logoFooter {
   height: 100px;
 }
+
+.buttonSubmit {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+
+  background: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 10px;
+
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.3s;
+}
