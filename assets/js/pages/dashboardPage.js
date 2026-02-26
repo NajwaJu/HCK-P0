@@ -1,6 +1,7 @@
 import { renderNavbar } from "../components/navbar.js";
 import { renderFooter } from "../components/footer.js";
 import { initCarousel } from "../components/carousel.js";
+import { initDashboard } from "../controller/dashboardController.js";
 
 export function renderDashboardPage() {
   const app = document.getElementById("app");
@@ -24,16 +25,33 @@ export function renderDashboardPage() {
 
 
 
-      <div class="dashboard-grid">
-        <div class="card">Total Kamar</div>
-        <div class="card">Kamar Kosong</div>
-        <div class="card">Kamar Terisi</div>
-        <div class="card">Belum Bayar</div>
-  </div>
-  </div>
+        <div class="dashboard-grid">
+          <div class="card total">
+            <div class="card-title">🏠 Total Kamar</div>
+            <div class="card-value" id="dashTotalRoom">0</div>
+          </div>
+
+          <div class="card empty">
+            <div class="card-title">🟢 Kamar Kosong</div>
+            <div class="card-value" id="dashEmptyRoom">0</div>
+          </div>
+
+          <div class="card occupied">
+            <div class="card-title">🔵 Kamar Terisi</div>
+            <div class="card-value" id="dashOccupiedRoom">0</div>
+          </div>
+
+          <div class="card unpaid">
+            <div class="card-title">💰 Pendapatan Bulan Ini</div>
+            <div class="card-value" id="dashIncome">Rp 0</div>
+          </div>
+        </div>
+      
+    </div>
   ${renderFooter()}
 
   `;
 
   initCarousel();
+  initDashboard();
 }
