@@ -2,7 +2,7 @@ export function renderNavbar() {
   return `
     <nav class="navbar">
       <div class="nav-left">
-        <img src="../assets/images/Logo.png" class="logo">
+        <img src="assets/images/Logo.png" class="logo">
       </div>
       <div class="nav-right">
         <button id="nav-dashboard">Dashboard</button>
