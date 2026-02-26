@@ -30,8 +30,8 @@ export function renderRoomsPage() {
 
           <input type="number" id="price" placeholder="Harga per bulan" required>
           <select id="depositPolicy">
-            <option value="yes">Pakai Deposit</option>
-            <option value="no">Tanpa Deposit</option>
+            <option value="">Tanpa Deposit</option>
+            <option value="(Deposit)">Pakai Deposit</option>
           </select>
           <button class="buttonSubmit" type="submit">Simpan Kamar</button>
         </form>

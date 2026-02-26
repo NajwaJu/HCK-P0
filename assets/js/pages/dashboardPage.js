@@ -14,14 +14,12 @@ export function renderDashboardPage() {
 
       <div class="carousel">
         <div class="slides" id="slides">
-            <img src="../assets/images/1caro.jpeg" alt="">
-            <img src="../assets/images/2caro.jpeg" alt="">
-            <img src="../assets/images/3caro.jpeg" alt="">
-            <img src="../assets/images/byr_kos.gif" alt="">
+            <img src="assets/images/1caro.jpeg" alt="">
+            <img src="assets/images/2caro.jpeg" alt="">
+            <img src="assets/images/3caro.jpeg" alt="">
+            <img src="assets/images/byr_kos.gif" alt="">
         </div>
       </div>
-
-
 
       <div class="dashboard-grid">
         <div class="card">Total Kamar</div>
@@ -30,8 +28,8 @@ export function renderDashboardPage() {
         <div class="card">Belum Bayar</div>
   </div>
   </div>
+  ${renderFooter()}
 
-    ${renderFooter()}
   `;
 
   initCarousel();

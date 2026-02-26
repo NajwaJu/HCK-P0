@@ -12,10 +12,9 @@ export function populateRoomDropdown() {
   rooms.forEach(room => {
     if (room.status === "empty") {
       select.innerHTML += `
-        <option value="${room.id}"  
-          data-deposit="${room.depositPolicy}" 
-          data-price="${room.price}">
-          ${room.name} (${room.type})
+        <option value="${room.id}" >
+          ${room.name} (${room.type}) - Rp ${room.price} ${room.depositPolicy}
+        
         </option>
       `;
     }
@@ -31,9 +30,9 @@ export function initTenantForm() {
 
     const name = document.getElementById("tenantName").value;
     const roomId = document.getElementById("roomSelect").value;
-    const room = getRoom(roomId);
-
-    const deposit = room.depositPolicy === " hookup yes" ? room.price : 0;
+    // const room = getRoom(roomId);
+    const room = getRooms().find(r => r.id === roomId);
+    // const deposit = room.depositPolicy === " hookup yes" ? room.price : 0;
 
     addTenant({
       name,
@@ -98,4 +97,39 @@ export function handleRoomSelection() {
       depositInput.value = 0;
     }
   });
+}
+
+export function setupRoomAutoFill() {
+  const roomSelect = document.getElementById("roomSelect");
+  const rentInput = document.getElementById("rentPriceInput");
+  const depositInput = document.getElementById("depositInput");
+
+  if (!roomSelect) return;
+
+  roomSelect.addEventListener("change", () => {
+    const rooms = getRooms();
+    const selectedRoomId = roomSelect.value;
+
+    const room = rooms.find(r => r.id === selectedRoomId);
+    if (!room) return;
+
+    // AUTO ISI HARGA SEWA
+    rentInput.value = room.price;
+
+    // CEK KEBIJAKAN DEPOSIT
+    if (room.depositPolicy === "yes") {
+      depositInput.style.display = "block";
+      depositInput.value = room.price; // deposit = 1 bulan
+    } else {
+      depositInput.style.display = "none";
+      depositInput.value = 0;
+    }
+  });
+}
+
+export function initTenantPage() {
+  populateRoomDropdown();
+  renderTenantList();   // ⬅️ ini yang bikin list muncul saat page dibuka
+  initTenantForm();
+  setupRoomAutoFill();
 }

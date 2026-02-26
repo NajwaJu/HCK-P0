@@ -5,7 +5,7 @@ import { renderPaymentsPage } from "./pages/paymentsPage.js";
 
 
 import { initRoomForm, renderRoomList, updateSummary } from "./controller/roomController.js";
-import { initTenantForm, renderTenantList, populateRoomDropdown } from "./controller/tenantController.js";
+import { initTenantForm, renderTenantList, populateRoomDropdown, initTenantPage } from "./controller/tenantController.js";
 
 export function initRouter() {
 
@@ -37,6 +37,8 @@ export function initRouter() {
       renderTenantList();
       populateRoomDropdown();
       handleRoomSelection();
+      setupRoomAutoFill();
+      initTenantPage();
     }
 
     // PAYMENTS PAGE (nanti)

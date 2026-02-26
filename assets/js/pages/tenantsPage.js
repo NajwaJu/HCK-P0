@@ -2,7 +2,8 @@ import { renderNavbar } from "../components/navbar.js";
 import {
   initTenantForm,
   renderTenantList,
-  populateRoomDropdown
+  populateRoomDropdown,
+  initTenantPage
 } from "../controller/tenantController.js";
 
 initTenantForm();
@@ -26,12 +27,11 @@ export function renderTenantsPage() {
           <input type="text" id="tenantName" placeholder="Nama Penghuni" required>
 
           <select id="roomSelect" required>
-           <option value="">Pilih Kamar</option>
-           
+            <option value="">Pilih Kamar</option>
           </select>
 
-          <input id="rentPriceInput" type="number" placeholder="Harga sewa" readonly>
-          <input id="depositInput" type="number" placeholder="Deposit">
+         
+          <input id="depositInput" type="number" placeholder="Deposit" style="display:none">
 
 
           <button class="buttonSubmit" type="submit">Check-In Penghuni</button>
