@@ -14,20 +14,29 @@ export function addRoom(room) {
     console.log("Error: Type kamar wajib diisi!");
     return null;
   }
-  if (typeof room.price !== 'number' || room.price <= 0) {
-        console.log("Error: Price harus angka positif!");
-        return null;
-    }
 
-    for (let i = 0; i < rooms.length; i++) {
-        if (rooms[i].id === room.id) {
-            console.log(`Error: Room ID ${room.id} sudah ada!`);
-            return null;
-        }
+  // VALIDASI NOMOR KAMAR
+  if (!room.name || room.name.trim() === "") {
+    console.log("Error: Nomor kamar wajib diisi!");
+    return null;
+  }
+
+  // CEK DUPLIKAT NOMOR KAMAR (bukan ID!)
+  for (let i = 0; i < rooms.length; i++) {
+    if (rooms[i].name.toLowerCase() === room.name.toLowerCase()) {
+      console.log("Error: Nomor kamar sudah ada!");
+      return null;
     }
+  }
+
+  // VALIDASI HARGA HARUS ANGKA POSITIF
+  if (isNaN(room.price) || room.price <= 0) {
+    console.log("Error: Harga harus angka positif!");
+    return null;
+  }
 
   rooms.push(room);
-  console.log(`Informasi: Room ID ${room.id} berhasil dibuat`);
+  console.log(`Informasi: Room ${room.name} berhasil dibuat`);
   return room;
 }
 
@@ -38,11 +47,11 @@ export function getRooms() {
 
 export function getRoom(roomId) {
   for (let i = 0; i < rooms.length; i++) {
-      if (rooms[i].id === roomId) {
-          console.log(`Info: Room ID ${roomId} berhasil ditemukan`);
-          return rooms[i];
-      }
+    if (rooms[i].id === roomId) {
+      return rooms[i]; 
+    }
   }
+
   console.log(`Error: Room ID ${roomId} tidak ditemukan!`);
   return null;
 }

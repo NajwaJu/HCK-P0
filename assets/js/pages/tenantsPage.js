@@ -1,14 +1,8 @@
 import { renderNavbar } from "../components/navbar.js";
-import {
-  initTenantForm,
-  renderTenantList,
-  populateRoomDropdown,
-  initTenantPage
-} from "../controller/tenantController.js";
+import { initTenantPage } from "../controller/tenantController.js";
 
-initTenantForm();
-renderTenantList();
-populateRoomDropdown();
+
+
 
 export function renderTenantsPage() {
   const app = document.getElementById("app");
@@ -21,7 +15,7 @@ export function renderTenantsPage() {
       <div class ="space">
         <div class="form-card">
 
-            <form id="tenantForm-Card">
+            <form id="tenantForm" novalidate>
               <h2>Tambah Penghuni</h2>
 
               <input type="text" id="tenantName" placeholder="Nama Penghuni" required>
@@ -30,18 +24,28 @@ export function renderTenantsPage() {
                 <option value="">Pilih Kamar</option>
               </select>
 
-         
-              <input id="depositInput" type="number" placeholder="Deposit" style="display:none">
-
-
               <button class="buttonSubmit" type="submit">Check-In Penghuni</button>
             </form>
 
         </div>
 
+
+
         <div class="form-card">
           <h2>Daftar Penghuni</h2>
-          <div id="tenantList"></div>
+          <table class="tenant-table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>No Kamar</th>
+                <th>Tipe</th>
+                <th>Deposit</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tenantList"></tbody>
+          </table>
         </div>
       </div>
 
@@ -51,4 +55,5 @@ export function renderTenantsPage() {
 
 
   `;
+  initTenantPage();
 }

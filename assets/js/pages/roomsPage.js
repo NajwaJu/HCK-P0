@@ -28,10 +28,18 @@ export function renderRoomsPage() {
           <option value="Kamar Luar">Kamar Luar</option>
           </select>
 
-          <input type="number" id="price" placeholder="Harga per bulan" required>
+          <input 
+            type="text" 
+            id="price" 
+            placeholder="Harga per bulan"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            required
+          >
+          
           <select id="depositPolicy">
-            <option value="">Tanpa Deposit</option>
-            <option value="(Deposit)">Pakai Deposit</option>
+            <option value="no">Tanpa Deposit</option>
+            <option value="yes">Pakai Deposit</option>
           </select>
           <button class="buttonSubmit" type="submit">Simpan Kamar</button>
         </form>
@@ -42,7 +50,18 @@ export function renderRoomsPage() {
       <div class="list-header">
         <h2>Daftar Kamar</h2>
       </div>
-        <div id="roomList" class="room-list"></div>
+        <table class="room-table">
+          <thead>
+            <tr>
+              <th>No Kamar</th>
+              <th>Tipe</th>
+              <th>Harga</th>
+              <th>Penghuni</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="roomList"></tbody>
+        </table>
       </div>
    
     </div>

@@ -126,73 +126,89 @@ export function calculateLateDays(lastPaymentDate, todayDate) {
 // USE DEPOSIT IF TENANT LATE
 
 export function useDepositIfLate(paymentId, todayDate) {
+  const payment = findPaymentById(paymentId);
+  if (!payment) return null;
 
-  let payment = findPaymentById(paymentId);
+  const lateDays = calculateLateDays(payment.lastPaymentDate, todayDate);
 
-  if (payment === null) {
-    console.log("Payment tidak ditemukan");
-    return null;
-  }
-
+  //  TANPA DEPOSIT → cuma info telat
   if (payment.depositTotal === 0) {
-    return payment;
+    return {
+      noDeposit: true,
+      late: lateDays > 0,
+      days: lateDays
+    };
   }
 
-  let lateDays = calculateLateDays(payment.lastPaymentDate, todayDate);
-
-  if (lateDays > 0) {
-
-    let dailyRent = payment.monthlyRent / 30;
-    let depositUsed = dailyRent * lateDays;
-
-    payment.depositRemaining =
-      payment.depositRemaining - depositUsed;
-
-    if (payment.depositRemaining < 0) {
-      payment.depositRemaining = 0;
-    }
-
-    payment.status = "unpaid";
-
-    console.log("Telat " + lateDays + " hari");
+  //  ADA DEPOSIT
+  if (lateDays <= 0) {
+    return { late: false };
   }
 
-  return payment;
+  const dailyRent = payment.monthlyRent / 30;
+  let depositUsed = dailyRent * lateDays;
+
+  //  BATASI agar tidak lebih dari sisa deposit
+  if (depositUsed > payment.depositRemaining) {
+    depositUsed = payment.depositRemaining;
+  }
+
+  payment.depositRemaining -= depositUsed;
+  payment.status = "unpaid";
+
+  console.log("Telat " + lateDays + " hari");
+
+  return {
+    late: true,
+    days: lateDays,
+    used: depositUsed,
+    remaining: payment.depositRemaining
+  };
 }
 
 
 
 // CHECK EVICTION
-export function checkEviction(paymentId) {
+export function checkEviction(paymentId, todayDate) {
+  const payment = findPaymentById(paymentId);
+  if (!payment) return null;
 
-  let payment = findPaymentById(paymentId);
+  const lateDays = calculateLateDays(payment.lastPaymentDate, todayDate);
 
-  if (payment === null) {
-    console.log("Payment tidak ditemukan");
-    return null;
-  }
-
-  const tenant = getTenantById(payment.tenantId);
-
-  if (payment.depositRemaining <= 0) {
-
-    console.log(
-      `⚠️ PERINGATAN: Penghuni  ${tenant.name} dengan ID ${payment.tenantId} 
-      deposit sudah habis. Pertimbangkan untuk mengeluarkan tenant.`
-    );
+  //  KAMAR TANPA DEPOSIT
+  if (payment.depositTotal === 0) {
+    if (lateDays > 30) {
+      return {
+        warning: true,
+        type: "noDeposit",
+        daysLate: lateDays,
+        message: `Tenant telat ${lateDays} hari.\nPertimbangkan untuk dikeluarkan dari kos.`
+      };
+    }
 
     return {
-      warning: true,
-      tenantId: payment.tenantId,
-      message: "Deposit sudah habis"
+      warning: false,
+      type: "noDeposit",
+      daysLate: lateDays
     };
   }
 
+  //  KAMAR PAKAI DEPOSIT
+  if (payment.depositRemaining > 0) {
+    return {
+      warning: false,
+      type: "withDeposit"
+    };
+  }
+
+  // deposit HABIS → hitung telat sejak habis
   return {
-    warning: false
+    warning: true,
+    type: "withDeposit",
+    daysLate: lateDays,
+    message: `Deposit sudah habis.\nTenant telat ${lateDays} hari.\nPertimbangkan untuk dikeluarkan dari kos.`
   };
 }
-
 
 
 

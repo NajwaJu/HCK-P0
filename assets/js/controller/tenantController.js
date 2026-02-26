@@ -6,15 +6,17 @@ export function populateRoomDropdown() {
   if (!select) return;
 
   const rooms = getRooms();
-
-  select.innerHTML = "";
+  select.innerHTML = `<option value="">Pilih Kamar</option>`;
 
   rooms.forEach(room => {
     if (room.status === "empty") {
       select.innerHTML += `
-        <option value="${room.id}" >
-          ${room.name} (${room.type}) - Rp ${room.price} ${room.depositPolicy}
-        
+        <option 
+          value="${room.id}"
+          data-price="${room.price}"
+          data-deposit="${room.depositPolicy}">
+          
+          ${room.name} (${room.type}) - Rp ${room.price}
         </option>
       `;
     }
@@ -28,21 +30,39 @@ export function initTenantForm() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const name = document.getElementById("tenantName").value;
+    const name = document.getElementById("tenantName").value.trim();
     const roomId = document.getElementById("roomSelect").value;
-    // const room = getRoom(roomId);
-    const room = getRooms().find(r => r.id === roomId);
-    // const deposit = room.depositPolicy === " hookup yes" ? room.price : 0;
 
-    addTenant({
+    if (!roomId) {
+      alert("Pilih kamar terlebih dahulu!");
+      return;
+    }
+
+    //  ambil option yang dipilih
+    const selectedOption = document.querySelector("#roomSelect option:checked");
+
+    const roomPrice = Number(selectedOption.dataset.price);
+    const depositPolicy = selectedOption.dataset.deposit;
+
+    //  hitung deposit
+    let depositValue = 0;
+    if (depositPolicy === "yes") {
+      depositValue = roomPrice;
+    }
+
+    const result = addTenant({
       name,
       roomId,
-      rentPrice: room.price,
-      deposit: deposit
+      rentPrice: roomPrice,
+      deposit: depositValue
     });
 
-    form.reset();
+    if (!result) {
+      alert("Gagal check-in tenant");
+      return;
+    }
 
+    form.reset();
     renderTenantList();
     populateRoomDropdown();
   });
@@ -53,15 +73,30 @@ export function renderTenantList() {
   if (!container) return;
 
   const tenants = getTenants();
+  const rooms = getRooms();
 
   container.innerHTML = "";
 
   tenants.forEach(t => {
+    const room = rooms.find(r => r.id === t.roomId);
+
+    const roomNumber = room ? room.name : "-";
+    const roomType = room ? room.type : "-";
+
+    const depositStatus = t.deposit > 0 ? "Pakai Deposit" : "Tanpa Deposit";
+    const statusText = t.status === "active" ? "Aktif" : "Nonaktif";
+
     container.innerHTML += `
-      <div class="tenant-card">
-        <b>${t.name}</b> - Room ${t.roomId}
-        <button onclick="removeTenant('${t.id}')">Hapus</button>
-      </div>
+      <tr>
+        <td>${t.name}</td>
+        <td>${roomNumber}</td>
+        <td>${roomType}</td>
+        <td>${depositStatus}</td>
+        <td>${statusText}</td>
+        <td>
+          <button onclick="removeTenant('${t.id}')">Hapus</button>
+        </td>
+      </tr>
     `;
   });
 }
@@ -72,64 +107,11 @@ window.removeTenant = function(id) {
   populateRoomDropdown();
 }
 
-export function handleRoomSelection() {
-  const roomSelect = document.getElementById("roomSelect");
-  const depositInput = document.getElementById("depositInput");
-  const rentInput = document.getElementById("rentPriceInput");
 
-  if (!roomSelect) return;
 
-  roomSelect.addEventListener("change", () => {
-    const selectedOption = roomSelect.options[roomSelect.selectedIndex];
-
-    const depositPolicy = selectedOption.dataset.deposit;
-    const roomPrice = selectedOption.dataset.price;
-
-    // auto isi harga sewa dari room
-    rentInput.value = roomPrice;
-
-    // logic deposit
-    if (depositPolicy === "yes") {
-      depositInput.style.display = "block";
-      depositInput.value = roomPrice; // default deposit = 1 bulan
-    } else {
-      depositInput.style.display = "none";
-      depositInput.value = 0;
-    }
-  });
-}
-
-export function setupRoomAutoFill() {
-  const roomSelect = document.getElementById("roomSelect");
-  const rentInput = document.getElementById("rentPriceInput");
-  const depositInput = document.getElementById("depositInput");
-
-  if (!roomSelect) return;
-
-  roomSelect.addEventListener("change", () => {
-    const rooms = getRooms();
-    const selectedRoomId = roomSelect.value;
-
-    const room = rooms.find(r => r.id === selectedRoomId);
-    if (!room) return;
-
-    // AUTO ISI HARGA SEWA
-    rentInput.value = room.price;
-
-    // CEK KEBIJAKAN DEPOSIT
-    if (room.depositPolicy === "yes") {
-      depositInput.style.display = "block";
-      depositInput.value = room.price; // deposit = 1 bulan
-    } else {
-      depositInput.style.display = "none";
-      depositInput.value = 0;
-    }
-  });
-}
 
 export function initTenantPage() {
   populateRoomDropdown();
-  renderTenantList();   // ⬅️ ini yang bikin list muncul saat page dibuka
+  renderTenantList();
   initTenantForm();
-  setupRoomAutoFill();
 }

@@ -15,12 +15,24 @@ tenant object contoh:
 }
 */
 export function addTenant(tenant) {
+ 
+  if (!tenant.roomId || tenant.roomId === "") {
+    console.log("Error: Tenant harus memilih kamar!");
+    return null;
+  }
 
   const room = getRoom(tenant.roomId);
+
   if (!room) {
     console.log("Error: Room tidak ditemukan!");
     return null;
   }
+
+  if (room.status === "occupied") {
+    console.log("Error: Kamar sudah terisi!");
+    return null;
+  }
+
   tenant.id = "TEN-" + Date.now();
   tenant.status = "active";
   tenant.remainingDeposit = tenant.deposit;

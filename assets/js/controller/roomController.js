@@ -1,4 +1,5 @@
 import { addRoom, getRooms } from "../services/roomService.js";
+import { getTenants } from "../services/tenantService.js";
 
 export function initRoomForm() {
   const form = document.getElementById("roomForm");
@@ -8,15 +9,23 @@ export function initRoomForm() {
     e.preventDefault();
 
     // ambil value dari input
-    const number = document.getElementById("number").value;
+    const number = document.getElementById("number").value.trim();
     const type = document.getElementById("type").value;
-    const price = Number(document.getElementById("price").value);
+    const priceInput = document.getElementById("price").value.trim();
+
+    // hanya angka
+    if (!/^\d+$/.test(priceInput)) {
+      alert("Harga harus berupa angka positif!");
+      return;
+    }
+
+const price = Number(priceInput);
     const depositPolicy = document.getElementById("depositPolicy").value;
     // buat ID otomatis
     const roomId = "ROOM-" + Date.now();
 
     // kirim ke service
-    addRoom({
+    const result = addRoom({
       id: roomId,
       name: number,
       type: type,
@@ -25,8 +34,12 @@ export function initRoomForm() {
       status: "empty"
     });
 
-    // reset form
-    form.reset();
+    if (!result) {
+      alert("Data kamar tidak valid / nomor kamar sudah ada!");
+      return;
+    }
+    // // reset form
+    // form.reset();
 
     // refresh tampilan kamar
     renderRoomList();
@@ -39,20 +52,26 @@ export function renderRoomList() {
   if (!roomList) return;
 
   const rooms = getRooms();
+  const tenants = getTenants();
 
   roomList.innerHTML = "";
 
   rooms.forEach(room => {
-    const statusClass = room.status === "empty" ? "empty" : "occupied";
+    const tenant = tenants.find(
+      t => t.roomId === room.id && t.status === "active"
+    );
+
+    const occupant = tenant ? tenant.name : "-";
     const statusText = room.status === "empty" ? "Kosong" : "Terisi";
 
     roomList.innerHTML += `
-      <div class="room-item">
-        <div class="room-number">${room.name}</div>
-        <div class="room-type">${room.type}</div>
-        <div class="room-price">Rp ${room.price}</div>
-        <span class="status ${statusClass}">${statusText}</span>
-      </div>
+      <tr>
+        <td>${room.name}</td>
+        <td>${room.type}</td>
+        <td>Rp ${room.price}</td>
+        <td>${occupant}</td>
+        <td>${statusText}</td>
+      </tr>
     `;
   });
 }

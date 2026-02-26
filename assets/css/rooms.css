@@ -63,3 +63,25 @@ input:focus, select:focus {
 .list-header h2{
   font-size: 20px;
 }
+
+.room-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.room-table th {
+  background: #2e8b6f;
+  color: white;
+  padding: 12px;
+  text-align: left;
+}
+
+.room-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.room-table tr:hover {
+  background: #f5f5f5;
+}

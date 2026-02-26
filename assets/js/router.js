@@ -2,10 +2,11 @@ import { renderDashboardPage } from "./pages/dashboardPage.js";
 import { renderRoomsPage } from "./pages/roomsPage.js";
 import { renderTenantsPage } from "./pages/tenantsPage.js";
 import { renderPaymentsPage } from "./pages/paymentsPage.js";
+import { initPaymentsPage } from "./controller/paymentController.js";
 
 
 import { initRoomForm, renderRoomList, updateSummary } from "./controller/roomController.js";
-import { initTenantForm, renderTenantList, populateRoomDropdown, initTenantPage } from "./controller/tenantController.js";
+import { initTenantPage } from "./controller/tenantController.js";
 
 export function initRouter() {
 
@@ -23,27 +24,19 @@ export function initRouter() {
     if (e.target.id === "nav-rooms") {
       renderRoomsPage();
 
-      initRoomForm();
-      renderRoomList();
-      updateSummary();
+
     }
 
     // TENANTS PAGE
     if (e.target.id === "nav-tenants") {
       renderTenantsPage();
 
- 
-      initTenantForm();
-      renderTenantList();
-      populateRoomDropdown();
-      handleRoomSelection();
-      setupRoomAutoFill();
-      initTenantPage();
     }
 
     // PAYMENTS PAGE (nanti)
     if (e.target.id === "nav-payments") {
       renderPaymentsPage();
+      initPaymentsPage();
     }
 
   });
