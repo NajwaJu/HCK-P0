@@ -9,9 +9,9 @@ export function renderFooter() {
             <div class="footer-middle">
                 <p class="footer-title">Our Team</p>
                 <ul>
-                    <li>Kak Desi</li>
-                    <li>Kak Jefry</li>
-                    <li>Kak Samy</li>
+                    <li>Desi Ratna Sari</li>
+                    <li>Jefry Tri Utomo</li>
+                    <li>Samy Kherid</li>
                     <li>Talitha Najwa Afifah</li>
                  </ul>
             </div>

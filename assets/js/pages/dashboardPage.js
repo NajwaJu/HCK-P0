@@ -8,9 +8,10 @@ export function renderDashboardPage() {
   app.innerHTML = `
     ${renderNavbar()}
 
-    <div class="container">
-      <h1 class="title">Bantu Ibu Kos</h1>
-      <p class="subtitle">Selamat datang di Bantu Ibu Kos</p>
+     <div class="container">
+      <h1 class="title">Selamat datang</h1>
+      <p class="subtitle">  Sistem Manajemen Kos untuk membantu Anda mengatur kamar,
+                            data penyewa, dan pembayaran dalam satu tempat.</p>
 
       <div class="carousel">
         <div class="slides" id="slides">
@@ -20,6 +21,8 @@ export function renderDashboardPage() {
             <img src="assets/images/byr_kos.gif" alt="">
         </div>
       </div>
+
+
 
       <div class="dashboard-grid">
         <div class="card">Total Kamar</div>
