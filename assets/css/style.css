@@ -81,7 +81,7 @@ body {
   font-family: "Inter", sans-serif;
   font-size: 22px;
   font-weight: 700;
-  color: #111;
+  color: #1a4611;
   letter-spacing: 0.5px;
 }
 .nav-right {
@@ -124,10 +124,10 @@ body {
 
 /* FOOTER */
 .footer {
-  background: #424d4a;
-  color: white;
+  background: #3f4a47;
+  color: #ffffff;
   margin-top: auto;
-  padding: 40px 0;
+  padding: 30px 0 18px 0;
   
 }
 
@@ -137,33 +137,57 @@ body {
   margin: auto;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
   
 }
 
 .footer-title {
   font-size: 22px;
   font-family: 'Sigmar One', cursive;
+  margin-bottom: 10px;
+}
+.footer-left {
+  max-width: 220px;             
+}
+
+.footer-middle h4 {
+  font-size: 15px;            
+  font-weight: 600;            
+  margin-bottom: 10px;          
 }
 
 .footer-middle ul {
   list-style: none;
-  margin-top: 10px;
-  font-family: 'Red Hat', sans-serif;
+  padding: 0;
 }
 
 .footer-middle li {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #d1d5db;
+  transition: 0.2s;
+}
+.footer-middle li:hover {
+  color: #ffffff;      
+  cursor: pointer;     
 }
 
-.footer-right {
+.footer-right p {
   display: flex;
   align-items: flex-end;
+  font-size: 13px;
+  color: #cbd5d1;
 }
 
 .logoFooter {
-  height: 100px;
+  height: 150px;
 }
-
+.footer-brand {
+  margin-top: 8px;     
+  font-size: 15px;     
+  font-weight: 600;    
+}
 .buttonSubmit {
   width: 100%;
   padding: 14px;
@@ -179,4 +203,7 @@ body {
   cursor: pointer;
 
   transition: 0.3s;
+}
+.buttonSubmit:hover {
+  background: #27ae60; 
 }

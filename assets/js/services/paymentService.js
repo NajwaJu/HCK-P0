@@ -9,10 +9,8 @@ STRUCTURE PAYMENT OBJECT
   tenantId: "TEN001",
   roomId: "RM001",
   monthlyRent: 1000000,
-  depositTotal: 1000000,
-  depositRemaining: 1000000,
   lastPaymentDate: "2026-02-01",
-  status: "paid" // paid | unpaid | evicted
+  status: "paid" // paid | unpaid 
 }
 */
 
@@ -77,8 +75,6 @@ export function getPayments() {
   return payments;
 }
 
-
-
 // PAY MONTHLY RENT
 
 export function payMonthlyRent(paymentId, todayDate) {
@@ -91,145 +87,53 @@ export function payMonthlyRent(paymentId, todayDate) {
 
   payment.lastPaymentDate = todayDate;
   payment.status = "paid";
-  payment.depositRemaining = payment.depositTotal;
 
   console.log("Berhasil bayar bulanan");
   return payment;
 }
 
-
-
 // CALCULATE LATE DAYS
 
 export function calculateLateDays(lastPaymentDate, todayDate) {
-    if (!lastPaymentDate || lastPaymentDate === "") {
-    return 0;
-  }
+  if (!lastPaymentDate || lastPaymentDate === "") return 0;
 
-  let d1 = new Date(lastPaymentDate);
-  let d2 = new Date(todayDate);
+  let paidDate = new Date(lastPaymentDate);
+  let today = new Date(todayDate);
 
-  if (isNaN(d1.getTime()) || isNaN(d2.getTime())) {
+  if (isNaN(paidDate.getTime()) || isNaN(today.getTime())) {
     console.log("Format tanggal salah (YYYY-MM-DD)");
     return 0;
   }
 
-  let diffMs = d2.getTime() - d1.getTime();
+ // jatuh tempo: +1 bulan dari tanggal bayar (selalu tanggal 1 => aman)
+  let dueDate = new Date(paidDate);
+  dueDate.setMonth(dueDate.getMonth() + 1);
+
+  // kalau hari ini <= jatuh tempo => tidak telat
+  if (today.getTime() <= dueDate.getTime()) return 0;
+
+  let diffMs = today.getTime() - dueDate.getTime();
   let diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffDays <= 0) return 0;
-
-  return diffDays;
+  return diffDays > 0 ? diffDays : 0;
 }
 
-
-// USE DEPOSIT IF TENANT LATE
-
-export function useDepositIfLate(paymentId, todayDate) {
-  const payment = findPaymentById(paymentId);
-  if (!payment) return null;
-
-  const lateDays = calculateLateDays(payment.lastPaymentDate, todayDate);
-
-  //  TANPA DEPOSIT → cuma info telat
-  if (payment.depositTotal === 0) {
-    return {
-      noDeposit: true,
-      late: lateDays > 0,
-      days: lateDays
-    };
-  }
-
-  //  ADA DEPOSIT
-  if (lateDays <= 0) {
-    return { late: false };
-  }
-
-  const dailyRent = payment.monthlyRent / 30;
-  let depositUsed = dailyRent * lateDays;
-
-  //  BATASI agar tidak lebih dari sisa deposit
-  if (depositUsed > payment.depositRemaining) {
-    depositUsed = payment.depositRemaining;
-  }
-
-  payment.depositRemaining -= depositUsed;
-  payment.status = "unpaid";
-
-  console.log("Telat " + lateDays + " hari");
-
-  return {
-    late: true,
-    days: lateDays,
-    used: depositUsed,
-    remaining: payment.depositRemaining
-  };
-}
-
-
-
-// CHECK EVICTION
-export function checkEviction(paymentId, todayDate) {
-  const payment = findPaymentById(paymentId);
-  if (!payment) return null;
-
-  const lateDays = calculateLateDays(payment.lastPaymentDate, todayDate);
-
-  //  KAMAR TANPA DEPOSIT
-  if (payment.depositTotal === 0) {
-    if (lateDays > 30) {
-      return {
-        warning: true,
-        type: "noDeposit",
-        daysLate: lateDays,
-        message: `Tenant telat ${lateDays} hari.\nPertimbangkan untuk dikeluarkan dari kos.`
-      };
-    }
-
-    return {
-      warning: false,
-      type: "noDeposit",
-      daysLate: lateDays
-    };
-  }
-
-  //  KAMAR PAKAI DEPOSIT
-  if (payment.depositRemaining > 0) {
-    return {
-      warning: false,
-      type: "withDeposit"
-    };
-  }
-
-  // deposit HABIS → hitung telat sejak habis
-  return {
-    warning: true,
-    type: "withDeposit",
-    daysLate: lateDays,
-    message: `Deposit sudah habis.\nTenant telat ${lateDays} hari.\nPertimbangkan untuk dikeluarkan dari kos.`
-  };
-}
-
-
-
-// REFUND DEPOSIT (CHECK-OUT)
-
-export function refundDeposit(paymentId) {
-
+export function checkPaymentStatus(paymentId, todayDate) {
   let payment = findPaymentById(paymentId);
 
   if (payment === null) {
-    console.log("Payment tidak ditemukan");
-    return 0;
+    return "Payment tidak ditemukan";
   }
 
-  let sisa = payment.depositRemaining;
+  let lateDays = calculateLateDays(payment.lastPaymentDate, todayDate);
 
-  payment.depositRemaining = 0;
-
-  console.log("Refund deposit: " + sisa);
-
-  return sisa;
+  if (lateDays > 0) {
+    payment.status = "unpaid";
+    return `Telat ${lateDays} hari`;
+  } else {
+    payment.status = "paid";
+    return "Tidak telat";
+  }
 }
 
 export function deletePaymentByTenantId(tenantId) {

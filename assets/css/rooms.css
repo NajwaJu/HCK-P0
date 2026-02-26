@@ -85,3 +85,35 @@ input:focus, select:focus {
 .room-table tr:hover {
   background: #f5f5f5;
 }
+
+/* search */
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 20px 0;
+}
+.search-wrapper input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 2px solid #3aa17e;
+  outline: none;
+}
+/* 
+pagination */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background: #2e7d65;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}

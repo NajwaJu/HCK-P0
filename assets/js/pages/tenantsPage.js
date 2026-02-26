@@ -1,6 +1,6 @@
 import { renderNavbar } from "../components/navbar.js";
 import { initTenantPage } from "../controller/tenantController.js";
-
+import { renderFooter } from "../components/footer.js";
 
 
 
@@ -53,7 +53,7 @@ export function renderTenantsPage() {
    
     </div>
 
-
+   ${renderFooter()}
   `;
   initTenantPage();
 }

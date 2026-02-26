@@ -1,8 +1,7 @@
 import {
   getPayments,
   payMonthlyRent,
-  useDepositIfLate,
-  checkEviction
+  checkPaymentStatus
 } from "../services/paymentService.js";
 
 import { getTenantById } from "../services/tenantService.js";
@@ -42,7 +41,6 @@ export function renderPaymentList() {
           <h3>${tenantName}</h3>
           <p>Kamar : ${roomName}</p>
           <p>Sewa Bulanan : Rp ${p.monthlyRent}</p>
-          <p>Sisa Deposit : Rp ${Math.floor(p.depositRemaining)}</p>
           <p>Last Payment : ${p.lastPaymentDate || "-"}</p>
           <p>Status : ${statusBadge}</p>
         </div>
@@ -50,7 +48,6 @@ export function renderPaymentList() {
         <div class="payment-actions">
           <button onclick="payNow('${p.id}')">Bayar</button>
           <button onclick="checkLate('${p.id}')">Cek Telat</button>
-          <button onclick="checkEvict('${p.id}')">Cek Eviction</button>
         </div>
       </div>
     `;
@@ -61,7 +58,7 @@ function getTodayDate() {
   return document.getElementById("paymentDate").value;
 }
 
-window.payNow = function(paymentId) {
+window.payNow = function (paymentId) {
   const date = getTodayDate();
   if (!date) return alert("Pilih tanggal dulu!");
 
@@ -69,56 +66,13 @@ window.payNow = function(paymentId) {
   renderPaymentList();
 };
 
-window.checkLate = function(paymentId) {
+window.checkLate = function (paymentId) {
   const today = getTodayDate();
   if (!today) return alert("Pilih tanggal dulu!");
 
-  const result = useDepositIfLate(paymentId, today);
+  // ini yang sebelumnya missing:
+  const message = checkPaymentStatus(paymentId, today);
 
-  if (!result.late) {
-    alert("Tenant tidak telat 🙂");
-    return;
-  }
-
-  // kamar TANPA deposit
-  if (result.noDeposit) {
-    alert(`Tenant telat ${result.days} hari`);
-    return;
-  }
-
-  // kamar PAKAI deposit
-  alert(
-    `Tenant telat ${result.days} hari\n` +
-    `Deposit terpakai Rp ${Math.floor(result.used)}`
-  );
-
-  renderPaymentList();
-};
-
-window.checkEvict = function(paymentId) {
-  const today = getTodayDate();
-  if (!today) return alert("Pilih tanggal dulu!");
-
-  const result = checkEviction(paymentId, today);
-
-  //  TANPA DEPOSIT
-  if (result.type === "noDeposit") {
-    if (result.warning) {
-      alert(result.message);
-    } else {
-      alert(`Tenant telat ${result.daysLate} hari.\nMasih dalam batas aman.`);
-    }
-    return;
-  }
-
-  //  PAKAI DEPOSIT
-  if (result.type === "withDeposit") {
-    if (result.warning) {
-      alert(result.message);
-    } else {
-      alert("Deposit masih tersedia ");
-    }
-  }
-
-  renderPaymentList();
+  alert(message);
+  renderPaymentList(); // biar status Paid/Unpaid ikut ke-update
 };

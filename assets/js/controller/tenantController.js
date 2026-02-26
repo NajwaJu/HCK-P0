@@ -32,7 +32,10 @@ export function initTenantForm() {
 
     const name = document.getElementById("tenantName").value.trim();
     const roomId = document.getElementById("roomSelect").value;
-
+    if(name===""){
+      alert("Nama harus diisi!");
+      return;
+    }
     if (!roomId) {
       alert("Pilih kamar terlebih dahulu!");
       return;

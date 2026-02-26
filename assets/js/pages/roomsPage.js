@@ -1,6 +1,6 @@
 import { renderNavbar } from "../components/navbar.js";
 import { renderFooter } from "../components/footer.js";
-import { initRoomForm, renderRoomList, updateSummary } from "../controller/roomController.js";
+import { initRoomForm, renderRoomList, updateSummary, initRoomSearch } from "../controller/roomController.js";
 
 export function renderRoomsPage() {
   const app = document.getElementById("app");
@@ -21,11 +21,14 @@ export function renderRoomsPage() {
 
           <input type="text" id="number" placeholder="Nomor Kamar" required>
 
-          <select id="type">
-          <option value="AC">AC</option>
-          <option value="Non AC">Non AC</option>
-          <option value="Kamar Dalam">Kamar Dalam</option>
-          <option value="Kamar Luar">Kamar Luar</option>
+          <select id="acType">
+            <option value="AC">AC</option>
+            <option value="Non AC">Non AC</option>
+          </select>
+
+          <select id="bathroomType">
+            <option value="Kamar Mandi Dalam">Kamar Mandi Dalam</option>
+            <option value="Kamar Mandi Luar">Kamar Mandi Luar</option>
           </select>
 
           <input 
@@ -36,16 +39,16 @@ export function renderRoomsPage() {
             pattern="[0-9]*"
             required
           >
-          
-          <select id="depositPolicy">
-            <option value="no">Tanpa Deposit</option>
-            <option value="yes">Pakai Deposit</option>
-          </select>
+
           <button class="buttonSubmit" type="submit">Simpan Kamar</button>
+
         </form>
       </div>
 
-      <input placeholder="Cari kamar...">
+      <div class="search-wrapper">
+        <input id="searchRoomInput" type="text" placeholder="Cari nomor kamar..." />
+      </div>
+
       <div class="form-card">
       <div class="list-header">
         <h2>Daftar Kamar</h2>
@@ -62,6 +65,8 @@ export function renderRoomsPage() {
           </thead>
           <tbody id="roomList"></tbody>
         </table>
+
+      <div id="roomPagination" class="pagination"></div>
       </div>
    
     </div>
@@ -74,4 +79,5 @@ export function renderRoomsPage() {
   initRoomForm();
   renderRoomList();
   updateSummary();
+  initRoomSearch();
 }
