@@ -1,4 +1,5 @@
 import { initLoginForm } from "../controller/logInController.js";
+import { initLoginCarousel } from "../components/loginCarousel.js";
 
 export function renderLoginPage() {
   const app = document.getElementById("app");
@@ -79,49 +80,6 @@ export function renderLoginPage() {
   `;
 
   initLoginForm();
-  initCarouselSlider();
+  initLoginCarousel();
 }
 
-// Carousel variables
-let slideIndex = 1;
-
-// Carousel functions
-window.changeSlide = function(n) {
-  showSlide(slideIndex += n);
-};
-
-window.currentSlide = function(n) {
-  showSlide(slideIndex = n);
-};
-
-function showSlide(n) {
-  let slides = document.getElementsByClassName("carousel-slide");
-  let dots = document.getElementsByClassName("dot");
-  
-  if (n > slides.length) { slideIndex = 1; }
-  if (n < 1) { slideIndex = slides.length; }
-  
-  for (let i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-  }
-  
-  for (let i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  
-  if (slides[slideIndex - 1]) {
-    slides[slideIndex - 1].style.display = "block";
-  }
-  if (dots[slideIndex - 1]) {
-    dots[slideIndex - 1].className += " active";
-  }
-}
-
-function initCarouselSlider() {
-  showSlide(slideIndex);
-  
-  // Auto slide every 5 seconds
-  setInterval(() => {
-    changeSlide(1);
-  }, 5000);
-}

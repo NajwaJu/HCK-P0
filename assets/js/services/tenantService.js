@@ -15,6 +15,9 @@ tenant object contoh:
 }
 */
 export function addTenant(tenant) {
+  if (tenant.name === ""){
+    console.log("Error: Nama harus diisi!")
+  }
  
   if (!tenant.roomId || tenant.roomId === "") {
     console.log("Error: Tenant harus memilih kamar!");
